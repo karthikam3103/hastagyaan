@@ -1,18 +1,12 @@
-# Python
-__pycache__/
-*.py[cod]
 .venv/
 venv/
-
-# Secrets
+__pycache__/
+*.py[cod]
 .env
 .env.*
 !.env.example
-
-# macOS
 .DS_Store
 
-# Generated datasets
 dataset/train/
 dataset/validation/
 dataset/test/

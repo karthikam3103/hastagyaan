@@ -156,7 +156,7 @@ a {
 
 .hero h1 span {
   color: var(--rose);
-  font-style: italic;
+  font-style: italic;      
 }
 
 .hero-copy > p {
@@ -592,6 +592,29 @@ a {
   display: block;
 }
 
+.detection-caption {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  background: #d87591;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.prediction-error {
+  margin: 8px 20px 0;
+  color: #9f415c;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
 .camera-empty {
   padding: 35px 15px;
   text-align: center;
@@ -661,6 +684,20 @@ a {
   flex-wrap: wrap;
   gap: 10px;
   padding: 18px 20px 5px;
+}
+
+.training-panel {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid #eadbdd;
+  border-radius: 14px;
+  background: #fffaf9;
+}
+
+.training-panel > p {
+  margin: 0;
 }
 
 .privacy-note {
@@ -886,4 +923,219 @@ a {
     align-items: start;
     flex-direction: column;
   }
+}
+
+.library-selectors {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 16px;
+  align-items: end;
+  margin: 28px 0;
+}
+
+.mudra-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mudra-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #62424b;
+}
+
+.mudra-field select,
+.mudra-field input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid #e4d3d5;
+  border-radius: 10px;
+  background: #fff;
+  color: #35272b;
+  font: inherit;
+}
+
+.mudra-field select:disabled,
+.mudra-field input:disabled {
+  background: #f3eeee;
+  color: #8b8082;
+}
+
+.mudra-choice-field {
+  max-width: 520px;
+  margin: 24px 0;
+}
+
+.selected-mudra-detail {
+  max-width: 620px;
+  margin: 32px auto;
+  padding: 24px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #eadbdd;
+  border-radius: 16px;
+}
+
+.selected-mudra-detail img {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  max-height: 440px;
+  object-fit: contain;
+  margin: 20px auto;
+  border-radius: 10px;
+}
+
+@media (max-width: 700px) {
+  .library-selectors {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Mudra Library dropdown layout */
+.mudra-library-section {
+  scroll-margin-top: 90px;
+}
+
+.library-selectors {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 16px;
+  align-items: end;
+  margin: 28px 0;
+}
+
+.mudra-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mudra-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #62424b;
+}
+
+.mudra-field select,
+.mudra-field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid #e4d3d5;
+  border-radius: 10px;
+  background: #fff;
+  color: #35272b;
+  font: inherit;
+}
+
+.mudra-field select:disabled,
+.mudra-field input:disabled {
+  background: #f3eeee;
+  color: #8b8082;
+}
+
+.mudra-choice-field {
+  max-width: 520px;
+  margin: 24px 0;
+}
+
+.selected-mudra-detail {
+  max-width: 620px;
+  margin: 32px auto;
+  padding: 24px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #eadbdd;
+  border-radius: 16px;
+}
+
+.selected-mudra-detail img {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  max-height: 440px;
+  object-fit: contain;
+  margin: 20px auto;
+  border-radius: 10px;
+}
+
+@media (max-width: 700px) {
+  .library-selectors {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Five-language mudra details */
+.mudra-translation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+  text-align: left;
+}
+.mudra-language {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid #eadbdd;
+  border-radius: 12px;
+  background: #fffaf9;
+  overflow-wrap: anywhere;
+}
+.mudra-language span {
+  color: #a84966;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.mudra-language strong {
+  color: #35272b;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+.mudra-language:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: calc(50% - 6px);
+}
+@media (max-width: 600px) {
+  .mudra-translation-grid { grid-template-columns: 1fr; }
+  .mudra-language:last-child:nth-child(odd) {
+    grid-column: auto;
+    width: auto;
+  }
+}
+
+
+/* Fix navigation spacing for the Recognition / Practice section */
+#recognize {
+  scroll-margin-top: 0 !important;
+}
+
+#recognize.section {
+  padding-top: 48px !important;
+}
+
+/* Consistent top spacing when navigating between sections */
+html {
+  scroll-padding-top: 0;
+  scroll-behavior: smooth;
+}
+
+#learn,
+#recognize,
+#mudra-library,
+#meaning {
+  scroll-margin-top: 0 !important;
 }

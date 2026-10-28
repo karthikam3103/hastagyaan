@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
+import mudraImages from "./mudras.json";
+import mudraTranslations from "./mudraTranslations.json";
 
 const API_URL = "http://127.0.0.1:8000";
 
@@ -19,9 +21,166 @@ const mudras = {
   },
 };
 
+
+function MudraLibrary() {
+  const [group, setGroup] = useState("");
+  const [selectedName, setSelectedName] = useState("");
+  const [search, setSearch] = useState("");
+
+  const groups = {
+    asamyuta: [
+      "Pataka", "Tripataka", "Ardhapataka",
+      "Kartarimukha 1", "Kartarimukha 2", "Mayura",
+      "Ardhacandra", "Arala", "Sukatunda", "Musti",
+      "Sikhara", "Kapittha", "Katakamukha 1",
+      "Katakamukha 2", "Katakamukha 3", "Suci",
+      "Candrakala", "Padmakosa", "Sarpasiras",
+      "Mrgasirsa", "Simhamukha", "Kangula 1",
+      "Kangula 2", "Alapadma", "Catura", "Bhramara",
+      "Hamsasya", "Hamsapaksa", "Samdamsa", "Mukula",
+      "Tamracuda", "Trisula 1", "Trisula 2",
+      "Vyaghra / Urnanabha", "Ardhasuci", "Bana",
+      "Palli", "Pralambha", "Trilinga", "Ardha Kangula"
+    ],
+    samyuta: [
+      "Anjali", "Kapota", "Karkata", "Svastika",
+      "Dolahasta", "Puspaputa", "Utsanga 1", "Utsanga 2",
+      "Sivalinga", "Katakavardhana", "Kartarisvastika",
+      "Sakata", "Sankha", "Cakra", "Samputa", "Pasa",
+      "Kilaka", "Matsya", "Kurma", "Varaha", "Garuda",
+      "Nagabandha", "Khatva", "Bherunda", "Avahittha"
+    ]
+  };
+
+  const normalize = (value) =>
+    value.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  const names = groups[group] || [];
+  const filteredNames = names.filter((name) =>
+    name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const images = mudraImages || [];
+  const selectedImage = images.find((item) => {
+    const imageName = normalize(
+      item.name.replace(/^\d+\s*/, "")
+    );
+    const wantedName = normalize(selectedName);
+    return wantedName &&
+      (imageName === wantedName || imageName.startsWith(wantedName));
+  });
+
+  const selectedTranslation = Object.entries(mudraTranslations).find(
+    ([name]) => normalize(name) === normalize(selectedName)
+  )?.[1];
+
+
+  return (
+    <section id="mudra-library" className="section mudra-library-section">
+      <div className="section-heading">
+        <p className="eyebrow">EXPLORE THE COLLECTION</p>
+        <h2>Mudra Library</h2>
+        <p>Choose a group, then select the mudra you want to learn.</p>
+      </div>
+
+      <div className="library-selectors">
+        <div className="mudra-field">
+          <label htmlFor="mudra-category">Main category</label>
+          <select id="mudra-category" value="classical" disabled>
+            <option value="classical">Classical Indian Dance (Hastas)</option>
+          </select>
+        </div>
+
+        <div className="mudra-field">
+          <label htmlFor="mudra-group">Select mudra group</label>
+          <select
+            id="mudra-group"
+            value={group}
+            onChange={(event) => {
+              setGroup(event.target.value);
+              setSelectedName("");
+              setSearch("");
+            }}
+          >
+            <option value="">Choose a group...</option>
+            <option value="asamyuta">Asamyuta Hasta (40 entries)</option>
+            <option value="samyuta">Samyuta Hasta (25 entries)</option>
+          </select>
+        </div>
+
+        <div className="mudra-field mudra-search-field">
+          <label htmlFor="mudra-search">Search</label>
+          <input
+            id="mudra-search"
+            type="search"
+            placeholder="Search selected group..."
+            value={search}
+            disabled={!group}
+            onChange={(event) => {
+              setSearch(event.target.value);
+              setSelectedName("");
+            }}
+          />
+        </div>
+      </div>
+
+      {!group && (
+        <p className="muted-note">
+          Select a mudra group to begin exploring.
+        </p>
+      )}
+
+      {group && (
+        <div className="mudra-field mudra-choice-field">
+          <label htmlFor="mudra-choice">
+            Select a mudra ({filteredNames.length} available)
+          </label>
+          <select
+            id="mudra-choice"
+            value={selectedName}
+            onChange={(event) => setSelectedName(event.target.value)}
+          >
+            <option value="">Choose a mudra...</option>
+            {filteredNames.map((name) => (
+              <option key={name} value={name}>{name}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {selectedName && (
+        <article className="selected-mudra-detail">
+          <h3>{selectedName}</h3>
+          {selectedImage ? (
+            <img src={selectedImage.image} alt={`${selectedName} mudra`} />
+          ) : (
+            <p className="muted-note">
+              No matching reference image was found for this mudra yet.
+            </p>
+          )}
+          <div className="mudra-translation-grid">
+            {["English", "Telugu", "Tamil", "Kannada", "Malayalam"].map((language, index) => (
+              <div className="mudra-language" key={language}>
+                <span>{language}</span>
+                <strong>{selectedTranslation?.[index] || "Translation not provided yet"}</strong>
+              </div>
+            ))}
+          </div>
+        </article>
+      )}
+    </section>
+  );
+}
+
 function App() {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
+  const cameraPageActive = useRef(false);
+  const cameraStarting = useRef(false);
+  const liveRequestBusy = useRef(false);
+  const collectRequestBusy = useRef(false);
+  const livePredictionHistory = useRef([]);
+  const livePredictionMisses = useRef(0);
   const previousImageUrl = useRef(null);
 
   const [cameraOn, setCameraOn] = useState(false);
@@ -31,12 +190,174 @@ function App() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [backendStatus, setBackendStatus] = useState("checking");
+  const [modelReady, setModelReady] = useState(false);
+  const [liveResult, setLiveResult] = useState(null);
+  const [livePredictionError, setLivePredictionError] = useState("");
+  const [trainingMudra, setTrainingMudra] = useState("Alapadma");
+  const [isCollecting, setIsCollecting] = useState(false);
+  const [sampleCounts, setSampleCounts] = useState({});
+  const [trainingMessage, setTrainingMessage] = useState("");
+  const [isTraining, setIsTraining] = useState(false);
+
+  const trainingMudras = [
+    "Pataka", "Tripataka", "Ardhapataka", "Kartarimukha 1",
+    "Kartarimukha 2", "Mayura", "Ardhacandra", "Arala", "Sukatunda",
+    "Musti", "Sikhara", "Kapittha", "Katakamukha 1", "Katakamukha 2",
+    "Katakamukha 3", "Suci", "Candrakala", "Padmakosa", "Sarpasiras",
+    "Mrgasirsa", "Simhamukha", "Kangula 1", "Kangula 2", "Alapadma",
+    "Catura", "Bhramara", "Hamsasya", "Hamsapaksa", "Samdamsa", "Mukula",
+    "Tamracuda", "Trisula 1", "Trisula 2", "Vyaghra / Urnanabha",
+    "Ardhasuci", "Bana", "Palli", "Pralambha", "Trilinga", "Ardha Kangula",
+    "Anjali", "Kapota", "Karkata", "Svastika", "Dolahasta", "Puspaputa",
+    "Utsanga 1", "Utsanga 2", "Sivalinga", "Katakavardhana",
+    "Kartarisvastika", "Sakata", "Sankha", "Cakra", "Samputa", "Pasa",
+    "Kilaka", "Matsya", "Kurma", "Varaha", "Garuda", "Nagabandha",
+    "Khatva", "Bherunda", "Avahittha",
+  ];
+
+  const refreshModelStatus = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/model/status`);
+      if (!response.ok) return;
+      const data = await response.json();
+      setModelReady(data.ready);
+      setSampleCounts(data.counts || {});
+    } catch {
+      // Backend status is also shown in the page header.
+    }
+  }, []);
+
+  const getFrameBlob = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || video.readyState < 2 || !video.videoWidth) {
+      return Promise.resolve(null);
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext("2d");
+    if (!context) return Promise.resolve(null);
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.78));
+  }, []);
+
+  useEffect(() => {
+    refreshModelStatus();
+    const timer = window.setInterval(refreshModelStatus, 5000);
+    return () => window.clearInterval(timer);
+  }, [refreshModelStatus]);
+
+  useEffect(() => {
+    if (!cameraOn || !modelReady) return undefined;
+    let effectIsActive = true;
+    let requestController = null;
+    livePredictionHistory.current = [];
+    livePredictionMisses.current = 0;
+    const timer = window.setInterval(async () => {
+      if (liveRequestBusy.current) return;
+      liveRequestBusy.current = true;
+      requestController = new AbortController();
+      try {
+        const blob = await getFrameBlob();
+        if (!blob) return;
+        const formData = new FormData();
+        formData.append("file", blob, "live-frame.jpg");
+        const response = await fetch(`${API_URL}/api/predict`, {
+          method: "POST",
+          body: formData,
+          signal: requestController.signal,
+        });
+        const data = await response.json();
+        if (!effectIsActive) return;
+        if (!response.ok) {
+          if (response.status === 409) setModelReady(false);
+          setLivePredictionError(data.detail || "Prediction is temporarily unavailable.");
+          return;
+        }
+
+        setLivePredictionError("");
+        if (data.recognized && data.prediction) {
+          livePredictionMisses.current = 0;
+          const history = [...livePredictionHistory.current, data.prediction].slice(-3);
+          livePredictionHistory.current = history;
+          const stableName = history.find(
+            (name) => history.filter((item) => item === name).length >= 2
+          );
+          if (stableName) setLiveResult({ ...data, prediction: stableName });
+        } else {
+          livePredictionMisses.current += 1;
+          livePredictionHistory.current = [];
+          if (livePredictionMisses.current >= 3) setLiveResult(data);
+        }
+      } catch (error) {
+        if (effectIsActive && error.name !== "AbortError") {
+          setLivePredictionError("Live prediction is temporarily unavailable.");
+        }
+      } finally {
+        liveRequestBusy.current = false;
+      }
+    }, 1500);
+    return () => {
+      effectIsActive = false;
+      window.clearInterval(timer);
+      requestController?.abort();
+      liveRequestBusy.current = false;
+    };
+  }, [cameraOn, getFrameBlob, modelReady]);
+
+  useEffect(() => {
+    if (!cameraOn || !isCollecting) return undefined;
+    const timer = window.setInterval(async () => {
+      if (collectRequestBusy.current) return;
+      collectRequestBusy.current = true;
+      try {
+        const blob = await getFrameBlob();
+        if (!blob) return;
+        const formData = new FormData();
+        formData.append("file", blob, "mudra-sample.jpg");
+        const response = await fetch(
+          `${API_URL}/api/collect?mudra=${encodeURIComponent(trainingMudra)}`,
+          { method: "POST", body: formData }
+        );
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.detail || "Could not save sample.");
+        }
+        const data = await response.json();
+        setSampleCounts((current) => ({ ...current, [trainingMudra]: data.count }));
+      } catch (error) {
+        setTrainingMessage(error.message);
+        setIsCollecting(false);
+      } finally {
+        collectRequestBusy.current = false;
+      }
+    }, 450);
+    return () => window.clearInterval(timer);
+  }, [cameraOn, getFrameBlob, isCollecting, trainingMudra]);
+
+  async function trainMudraModel() {
+    setIsTraining(true);
+    setTrainingMessage("Training the model…");
+    try {
+      const response = await fetch(`${API_URL}/api/train`, { method: "POST" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || "Model training failed.");
+      setModelReady(true);
+      setTrainingMessage(`Model trained on ${data.sample_count} samples across ${data.classes.length} mudras.`);
+      refreshModelStatus();
+    } catch (error) {
+      setTrainingMessage(error.message);
+    } finally {
+      setIsTraining(false);
+    }
+  }
 
   // Check whether the Python backend is running.
   useEffect(() => {
     let cancelled = false;
 
     async function checkBackend() {
+      
       try {
         const response = await fetch(`${API_URL}/`);
 
@@ -76,8 +397,10 @@ function App() {
     };
   }, []);
 
-  async function startCamera() {
+  const startCamera = useCallback(async () => {
     setCameraError("");
+
+    if (streamRef.current || cameraStarting.current) return;
 
     if (!navigator.mediaDevices?.getUserMedia) {
       setCameraError(
@@ -86,6 +409,7 @@ function App() {
       return;
     }
 
+    cameraStarting.current = true;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -96,6 +420,13 @@ function App() {
         audio: false,
       });
 
+      // The permission prompt can outlast the time the user spends on this
+      // section. Do not keep a stream that arrived after they left it.
+      if (!cameraPageActive.current) {
+        stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
+
       streamRef.current = stream;
 
       if (videoRef.current) {
@@ -104,6 +435,8 @@ function App() {
       }
 
       setCameraOn(true);
+      setLiveResult(null);
+      setLivePredictionError("");
       setPrediction(null);
     } catch (error) {
       setCameraError(
@@ -111,10 +444,12 @@ function App() {
           ? "Camera permission was denied. Allow camera access in Chrome and try again."
           : "Could not start the camera. Check that your webcam is available."
       );
+    } finally {
+      cameraStarting.current = false;
     }
-  }
+  }, []);
 
-  function stopCamera() {
+  const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
 
@@ -123,11 +458,41 @@ function App() {
     }
 
     setCameraOn(false);
+    setLiveResult(null);
+    setLivePredictionError("");
     setPrediction(null);
     setCameraError("");
-  }
+  }, []);
 
-  // Capture the webcam image and send it to FastAPI.
+  // Turn the camera on only while the recognition page is in view.
+  useEffect(() => {
+    const cameraPage = document.getElementById("recognize");
+    if (!cameraPage) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const isActive = entry.isIntersecting;
+        cameraPageActive.current = isActive;
+
+        if (isActive) {
+          startCamera();
+        } else {
+          setIsCollecting(false);
+          stopCamera();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(cameraPage);
+    return () => {
+      cameraPageActive.current = false;
+      observer.disconnect();
+      stopCamera();
+    };
+  }, [startCamera, stopCamera]);
+
+  // Capture one labeled training example with the selected mudra.
   async function captureImage() {
     const video = videoRef.current;
 
@@ -147,47 +512,20 @@ function App() {
     let imageUrl = null;
 
     try {
-      const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-
-      if (!canvas.width || !canvas.height) {
-        throw new Error("The camera image is not ready. Try again.");
-      }
-
-      const context = canvas.getContext("2d");
-
-      if (!context) {
-        throw new Error("Unable to process the camera image.");
-      }
-
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      // Convert the captured frame into a JPEG image.
-      const blob = await new Promise((resolve, reject) => {
-        canvas.toBlob(
-          (result) => {
-            if (result) {
-              resolve(result);
-            } else {
-              reject(new Error("Unable to capture the image."));
-            }
-          },
-          "image/jpeg",
-          0.92
-        );
-      });
+      const blob = await getFrameBlob();
+      if (!blob) throw new Error("The camera image is not ready. Try again.");
 
       imageUrl = URL.createObjectURL(blob);
-
-      // FastAPI expects the uploaded image under the field name "file".
       const formData = new FormData();
-      formData.append("file", blob, "mudra.jpg");
+      formData.append("file", blob, "mudra-training-sample.jpg");
 
-      const response = await fetch(`${API_URL}/api/predict`, {
+      const response = await fetch(
+        `${API_URL}/api/collect?mudra=${encodeURIComponent(trainingMudra)}`,
+        {
         method: "POST",
         body: formData,
-      });
+        }
+      );
 
       const data = await response.json();
 
@@ -203,15 +541,17 @@ function App() {
       }
 
       previousImageUrl.current = imageUrl;
+      setSampleCounts((current) => ({ ...current, [trainingMudra]: data.count }));
+      setTrainingMessage(`Saved training example ${data.count} for ${trainingMudra}.`);
 
       setPrediction({
         imageUrl,
-        message: data.message || "Image received by the backend.",
-        recognized: data.recognized === true,
-        mudraName: data.prediction || null,
-        model: data.model || null,
-        accuracy: data.accuracy ?? null,
-        status: data.status || "image_received",
+        message: `Training example ${data.count} saved for ${trainingMudra}.`,
+        recognized: false,
+        mudraName: null,
+        model: "training sample",
+        accuracy: null,
+        status: "sample_saved",
       });
     } catch (error) {
       if (imageUrl) {
@@ -219,8 +559,7 @@ function App() {
       }
 
       setCameraError(
-        error.message ||
-          "Could not connect to the backend. Make sure FastAPI is running."
+          error.message || "Could not save this training example."
       );
     } finally {
       setIsUploading(false);
@@ -450,8 +789,9 @@ function App() {
               <span className="eyebrow">STEP 02 · PRACTICE</span>
               <h2>Try it in front of the camera</h2>
               <p>
-                Position your hand clearly in the frame, capture an image,
-                and send it to our Python backend.
+                The camera starts while this section is open and checks for
+                trained mudras automatically. Capture gesture saves a labeled
+                training example.
               </p>
             </div>
 
@@ -498,6 +838,24 @@ function App() {
                 )}
               </div>
 
+              <div className="detection-caption">
+                Detected Mudra: {cameraOn
+                  ? modelReady
+                    ? liveResult?.recognized
+                      ? liveResult.prediction
+                      : livePredictionError
+                        ? "Prediction unavailable"
+                        : "Detecting…"
+                    : "Model not ready"
+                  : "Camera off"}
+              </div>
+
+              {livePredictionError && cameraOn && modelReady && (
+                <p className="prediction-error" role="status">
+                  {livePredictionError}
+                </p>
+              )}
+
               {cameraError && (
                 <p className="error-message">{cameraError}</p>
               )}
@@ -517,7 +875,7 @@ function App() {
                       onClick={captureImage}
                       disabled={isUploading}
                     >
-                      {isUploading ? "Sending image..." : "Capture gesture"}
+                      {isUploading ? "Saving example…" : "Capture gesture"}
                     </button>
 
                     <button
@@ -534,6 +892,50 @@ function App() {
               <p className="privacy-note">
                 Your camera is used only after you grant permission.
               </p>
+
+              <div className="training-panel">
+                <span className="eyebrow">BUILD YOUR RECOGNIZER</span>
+                <p>
+                  Choose the pose you are showing, then collect examples. Keep
+                  your hand inside the frame and vary its distance and angle.
+                </p>
+                <label className="mudra-field">
+                  <span>Mudra label</span>
+                  <select
+                    value={trainingMudra}
+                    onChange={(event) => setTrainingMudra(event.target.value)}
+                    disabled={isCollecting}
+                  >
+                    {trainingMudras.map((name) => (
+                      <option value={name} key={name}>{name}</option>
+                    ))}
+                  </select>
+                </label>
+                <p className="muted-note">
+                  {sampleCounts[trainingMudra] || 0} samples saved for {trainingMudra};
+                collect at least 20 for every mudra you want to recognize.
+                </p>
+                <div className="camera-actions">
+                  <button
+                    className={isCollecting ? "secondary-button" : "primary-button"}
+                    onClick={() => {
+                      setTrainingMessage("");
+                      setIsCollecting((value) => !value);
+                    }}
+                    disabled={!cameraOn}
+                  >
+                    {isCollecting ? "Stop collecting" : "Collect this mudra"}
+                  </button>
+                  <button
+                    className="secondary-button"
+                    onClick={trainMudraModel}
+                    disabled={isTraining}
+                  >
+                    {isTraining ? "Training…" : "Train model"}
+                  </button>
+                </div>
+                {trainingMessage && <p className="muted-note">{trainingMessage}</p>}
+              </div>
             </article>
 
             <article className="result-card">
@@ -542,21 +944,27 @@ function App() {
               <div className="result-symbol">✧</div>
 
               <h3>
-                {isUploading
-                  ? "Sending your image..."
-                  : prediction
-                    ? prediction.recognized
-                      ? prediction.mudraName || "Mudra recognized"
-                      : "Image received!"
-                    : "Ready to discover?"}
+                {modelReady && liveResult
+                  ? liveResult.recognized ? liveResult.prediction : "Hold your mudra steady…"
+                  : isUploading
+                    ? "Saving training example…"
+                    : prediction
+                      ? prediction.status === "sample_saved"
+                        ? "Training example saved"
+                        : prediction.mudraName || "Mudra recognized"
+                      : modelReady ? "Show a mudra to the camera" : "Collect examples to begin"}
               </h3>
 
               <p>
-                {isUploading
-                  ? "Please wait while the Python backend processes your image."
-                  : prediction
-                    ? prediction.message
-                    : "Capture your hand gesture to send an image to the backend."}
+                {modelReady && liveResult
+                  ? liveResult.recognized
+                    ? `Live match · ${(liveResult.accuracy * 100).toFixed(0)}% confidence`
+                    : "No confident match yet. Adjust your hand and lighting."
+                  : isUploading
+                    ? `Saving this frame as ${trainingMudra}.`
+                    : prediction
+                      ? prediction.message
+                      : "Select a label, collect examples, then train the model for live recognition."}
               </p>
 
               {prediction && (
@@ -567,9 +975,11 @@ function App() {
                   />
 
                   <strong>
-                    {prediction.recognized
-                      ? "Recognition completed"
-                      : "Image uploaded successfully"}
+                    {prediction.status === "sample_saved"
+                      ? "Training example saved"
+                      : prediction.recognized
+                        ? "Recognition completed"
+                        : "Image uploaded successfully"}
                   </strong>
 
                   <p>{prediction.message}</p>
@@ -581,7 +991,7 @@ function App() {
                     </p>
                   )}
 
-                  {!prediction.recognized && (
+                  {!prediction.recognized && prediction.status !== "sample_saved" && (
                     <p>
                       The image has reached the backend, but the trained CNN
                       has not been connected yet.
@@ -600,19 +1010,21 @@ function App() {
                 />
 
                 {backendStatus === "online"
-                  ? "Python backend connected"
+                  ? modelReady ? "Live mudra model ready" : "Backend connected · model needs training"
                   : backendStatus === "offline"
                     ? "Python backend unavailable"
                     : "Checking backend connection..."}
               </div>
 
               <p className="muted-note">
-                A real mudra prediction will appear after we train and
-                integrate the CNN model.
+                The model learns from your labeled camera examples. Its
+                confidence depends on the variety and quality of those samples.
               </p>
             </article>
           </div>
         </section>
+
+        <MudraLibrary />
 
         <section id="meaning" className="section meaning-section">
           <div className="section-heading">

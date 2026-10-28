@@ -1,0 +1,262 @@
+[
+  {
+    "name": "01 Alapadma",
+    "image": "/mudras/01_Alapadma.png"
+  },
+  {
+    "name": "01 Anjali",
+    "image": "/mudras/01_Anjali.png"
+  },
+  {
+    "name": "01 Kartarisvastika",
+    "image": "/mudras/01_Kartarisvastika.png"
+  },
+  {
+    "name": "01 Katakamukha 1",
+    "image": "/mudras/01_Katakamukha_1.png"
+  },
+  {
+    "name": "01 Khatva",
+    "image": "/mudras/01_Khatva.png"
+  },
+  {
+    "name": "01 Pataka",
+    "image": "/mudras/01_Pataka.png"
+  },
+  {
+    "name": "01 Vyaghra",
+    "image": "/mudras/01_Vyaghra.png"
+  },
+  {
+    "name": "02 Ardhasuci",
+    "image": "/mudras/02_Ardhasuci.png"
+  },
+  {
+    "name": "02 Bherunda",
+    "image": "/mudras/02_Bherunda.png"
+  },
+  {
+    "name": "02 Catura",
+    "image": "/mudras/02_Catura.png"
+  },
+  {
+    "name": "02 Kapota",
+    "image": "/mudras/02_Kapota.png"
+  },
+  {
+    "name": "02 Katakamukha 2",
+    "image": "/mudras/02_Katakamukha_2.png"
+  },
+  {
+    "name": "02 Sakata",
+    "image": "/mudras/02_Sakata.png"
+  },
+  {
+    "name": "02 Tripataka",
+    "image": "/mudras/02_Tripataka.png"
+  },
+  {
+    "name": "03 Ardhapataka",
+    "image": "/mudras/03_Ardhapataka.png"
+  },
+  {
+    "name": "03 Avahittha",
+    "image": "/mudras/03_Avahittha.png"
+  },
+  {
+    "name": "03 Bana",
+    "image": "/mudras/03_Bana.png"
+  },
+  {
+    "name": "03 Bhramara",
+    "image": "/mudras/03_Bhramara.png"
+  },
+  {
+    "name": "03 Karkata",
+    "image": "/mudras/03_Karkata.png"
+  },
+  {
+    "name": "03 Katakamukha 3",
+    "image": "/mudras/03_Katakamukha_3.png"
+  },
+  {
+    "name": "03 Sankha",
+    "image": "/mudras/03_Sankha.png"
+  },
+  {
+    "name": "04 Cakra",
+    "image": "/mudras/04_Cakra.png"
+  },
+  {
+    "name": "04 Hamsasya",
+    "image": "/mudras/04_Hamsasya.png"
+  },
+  {
+    "name": "04 Kartarimukha 1",
+    "image": "/mudras/04_Kartarimukha_1.png"
+  },
+  {
+    "name": "04 Palli",
+    "image": "/mudras/04_Palli.png"
+  },
+  {
+    "name": "04 Suci",
+    "image": "/mudras/04_Suci.png"
+  },
+  {
+    "name": "04 Svastika",
+    "image": "/mudras/04_Svastika.png"
+  },
+  {
+    "name": "05 Candrakala",
+    "image": "/mudras/05_Candrakala.png"
+  },
+  {
+    "name": "05 Dolahasta",
+    "image": "/mudras/05_Dolahasta.png"
+  },
+  {
+    "name": "05 Hamsapaksha",
+    "image": "/mudras/05_Hamsapaksha.png"
+  },
+  {
+    "name": "05 Kartarimukha 2",
+    "image": "/mudras/05_Kartarimukha_2.png"
+  },
+  {
+    "name": "05 Pralambha",
+    "image": "/mudras/05_Pralambha.png"
+  },
+  {
+    "name": "05 Samputa",
+    "image": "/mudras/05_Samputa.png"
+  },
+  {
+    "name": "06 Mayura",
+    "image": "/mudras/06_Mayura.png"
+  },
+  {
+    "name": "06 Padmakosa",
+    "image": "/mudras/06_Padmakosa.png"
+  },
+  {
+    "name": "06 Pasa",
+    "image": "/mudras/06_Pasa.png"
+  },
+  {
+    "name": "06 Puspaputa",
+    "image": "/mudras/06_Puspaputa.png"
+  },
+  {
+    "name": "06 Samdamsha",
+    "image": "/mudras/06_Samdamsha.png"
+  },
+  {
+    "name": "06 Trilinga",
+    "image": "/mudras/06_Trilinga.png"
+  },
+  {
+    "name": "07 Ardha Kangula",
+    "image": "/mudras/07_Ardha_Kangula.png"
+  },
+  {
+    "name": "07 Ardhachandra",
+    "image": "/mudras/07_Ardhachandra.png"
+  },
+  {
+    "name": "07 Kilaka",
+    "image": "/mudras/07_Kilaka.png"
+  },
+  {
+    "name": "07 Mukula",
+    "image": "/mudras/07_Mukula.png"
+  },
+  {
+    "name": "07 Sarpasiras",
+    "image": "/mudras/07_Sarpasiras.png"
+  },
+  {
+    "name": "07 Utsanga 1",
+    "image": "/mudras/07_Utsanga_1.png"
+  },
+  {
+    "name": "08 Arala",
+    "image": "/mudras/08_Arala.png"
+  },
+  {
+    "name": "08 Matsya",
+    "image": "/mudras/08_Matsya.png"
+  },
+  {
+    "name": "08 Mrgasisa",
+    "image": "/mudras/08_Mrgasisa.png"
+  },
+  {
+    "name": "08 Tamracuda",
+    "image": "/mudras/08_Tamracuda.png"
+  },
+  {
+    "name": "08 Utsanga 2",
+    "image": "/mudras/08_Utsanga_2.png"
+  },
+  {
+    "name": "09 Kurma",
+    "image": "/mudras/09_Kurma.png"
+  },
+  {
+    "name": "09 Simhamukha",
+    "image": "/mudras/09_Simhamukha.png"
+  },
+  {
+    "name": "09 Sivalinga",
+    "image": "/mudras/09_Sivalinga.png"
+  },
+  {
+    "name": "09 Sukatudna",
+    "image": "/mudras/09_Sukatudna.png"
+  },
+  {
+    "name": "09 Trisula 1",
+    "image": "/mudras/09_Trisula_1.png"
+  },
+  {
+    "name": "10 Kangula 1",
+    "image": "/mudras/10_Kangula_1.png"
+  },
+  {
+    "name": "10 Katakavardhana",
+    "image": "/mudras/10_Katakavardhana.png"
+  },
+  {
+    "name": "10 Mushti",
+    "image": "/mudras/10_Mushti.png"
+  },
+  {
+    "name": "10 Trisula 2",
+    "image": "/mudras/10_Trisula_2.png"
+  },
+  {
+    "name": "10 Varaha",
+    "image": "/mudras/10_Varaha.png"
+  },
+  {
+    "name": "11 Garuda",
+    "image": "/mudras/11_Garuda.png"
+  },
+  {
+    "name": "11 Kangula 2",
+    "image": "/mudras/11_Kangula_2.png"
+  },
+  {
+    "name": "11 Sikhara",
+    "image": "/mudras/11_Sikhara.png"
+  },
+  {
+    "name": "12 Kapittha",
+    "image": "/mudras/12_Kapittha.png"
+  },
+  {
+    "name": "12 Nagabandha",
+    "image": "/mudras/12_Nagabandha.png"
+  }
+]
